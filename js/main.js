@@ -98,7 +98,7 @@ map.on('singleclick', function(evt) {
       var message = '<table class="table table-dark">';
       message += '<tbody>';
       for(pk in votes[p.properties.key]) {
-        message += '<tr><th scope="row" style="width: 80px;">' + pk + '</th><td>' + votes[p.properties.key][pk] + '</td></tr>';
+        message += '<tr><th scope="row" style="width: 100px;">' + pk + '</th><td>' + votes[p.properties.key][pk] + '</td></tr>';
       }
       message += '<tr><td colspan="2">';
       message += '<hr /><div class="btn-group-vertical" role="group" style="width: 100%;">';
@@ -107,7 +107,7 @@ map.on('singleclick', function(evt) {
       message += '<a href="https://bing.com/maps/default.aspx?rtp=~pos.' + lonLat[1] + '_' + lonLat[0] + '" target="_blank" class="btn btn-info btn-lg btn-block">Bing 導航</a>';
       message += '</div></td></tr>';
       message += '</tbody></table>';
-      sidebarTitle.innerHTML = votes[p.properties.key]['幼兒園名稱'];
+      sidebarTitle.innerHTML = votes[p.properties.key]['投開票所名稱'];
       content.innerHTML = message;
       sidebar.open('home');
       pointClicked = true;
