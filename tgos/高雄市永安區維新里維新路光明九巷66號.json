@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<string xmlns="http://tempuri.org/">{
+  "Info": [
+    {
+      "IsSuccess": "True",
+      "InAddress": "高雄市永安區維新里維新路光明九巷66號",
+      "InSRS": "EPSG:4326",
+      "InFuzzyType": "[單雙號機制]+[最近門牌號機制]",
+      "InFuzzyBuffer": "0",
+      "InIsOnlyFullMatch": "False",
+      "InIsLockCounty": "True",
+      "InIsLockTown": "False",
+      "InIsLockVillage": "False",
+      "InIsLockRoadSection": "False",
+      "InIsLockLane": "False",
+      "InIsLockAlley": "False",
+      "InIsLockArea": "False",
+      "InIsSameNumber_SubNumber": "True",
+      "InCanIgnoreVillage": "True",
+      "InCanIgnoreNeighborhood": "True",
+      "InReturnMaxCount": "0",
+      "OutTotal": "4",
+      "OutMatchType": "模糊比對",
+      "OutMatchCode": "[高雄市]\tT:1,V:1,R:1,S:-1,L:0,A:-1,SA:-1,T:-1,AR:0,NO:1,E:-1,N:-1",
+      "OutTraceInfo": "[高雄市]\t { 模糊比對 } (永安區)\t找到符合的[鄉鎮市區]，(維新里)\t找到符合的[村里]，(維新路)\t找到符合的[路街名]，(光明九巷)\t找不到符合的[巷]，(光明九巷)\t找不到符合的[地區]，進行轉換搜尋[路或街變成地區名]，轉換搜尋找不到符合的[地區]，(66號)\t找到符合的[門牌號碼]，進行[雙號過濾]，模糊比對找到 4 筆符合的門牌地址。"
+    }
+  ],
+  "AddressList": [
+    {
+      "FULL_ADDR": "高雄市永安區維新里10鄰維新路66號",
+      "COUNTY": "高雄市",
+      "TOWN": "永安區",
+      "VILLAGE": "維新里",
+      "NEIGHBORHOOD": "10鄰",
+      "ROAD": "維新路",
+      "SECTION": "",
+      "LANE": "",
+      "ALLEY": "",
+      "SUB_ALLEY": "",
+      "TONG": "",
+      "NUMBER": "66號",
+      "X": 120.245667,
+      "Y": 22.808356
+    },
+    {
+      "FULL_ADDR": "高雄市永安區維新里15鄰維新路光明3巷66號",
+      "COUNTY": "高雄市",
+      "TOWN": "永安區",
+      "VILLAGE": "維新里",
+      "NEIGHBORHOOD": "15鄰",
+      "ROAD": "維新路",
+      "SECTION": "",
+      "LANE": "光明3巷",
+      "ALLEY": "",
+      "SUB_ALLEY": "",
+      "TONG": "",
+      "NUMBER": "66號",
+      "X": 120.256680,
+      "Y": 22.802614
+    },
+    {
+      "FULL_ADDR": "高雄市永安區維新里1鄰維新路光明8巷66號",
+      "COUNTY": "高雄市",
+      "TOWN": "永安區",
+      "VILLAGE": "維新里",
+      "NEIGHBORHOOD": "1鄰",
+      "ROAD": "維新路",
+      "SECTION": "",
+      "LANE": "光明8巷",
+      "ALLEY": "",
+      "SUB_ALLEY": "",
+      "TONG": "",
+      "NUMBER": "66號",
+      "X": 120.247209,
+      "Y": 22.806816
+    },
+    {
+      "FULL_ADDR": "高雄市永安區維新里6鄰維新路光明9巷66號",
+      "COUNTY": "高雄市",
+      "TOWN": "永安區",
+      "VILLAGE": "維新里",
+      "NEIGHBORHOOD": "6鄰",
+      "ROAD": "維新路",
+      "SECTION": "",
+      "LANE": "光明9巷",
+      "ALLEY": "",
+      "SUB_ALLEY": "",
+      "TONG": "",
+      "NUMBER": "66號",
+      "X": 120.246396,
+      "Y": 22.804480
+    }
+  ]
+}</string>
