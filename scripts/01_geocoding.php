@@ -2,6 +2,32 @@
 $config = require __DIR__ . '/config.php';
 $json = json_decode(file_get_contents(dirname(__DIR__) . '/tabula.json'));
 $result = array();
+$ref = array(
+    '高雄市梓官區禮蚵里光明路79巷7號' => array(
+        120.249795,22.731158,'梓官區','禮蚵里'
+    ),
+    '高雄市左營區聖西里蓮潭路47號' => array(
+        120.292896,22.683542,'左營區','聖西里'
+    ),
+    '高雄市鳥松區大華里本館路44-7號' => array(
+        120.342461502963,22.6507885038431,'鳥松區','大華里'
+    ),
+    '高雄市鹽埕區江南里2鄰五褔四路183號' => array(
+        120.282912,22.623692,'鹽埕區','江南里'
+    ),
+    '高雄市苓雅區意誠里城西街17號旁(意誠堂停車場)' => array(
+        120.300136,22.612572,'苓雅區','城北里'
+    ),
+    '高雄市前鎮區德昌里新衙路17號' => array(
+        120.321031,22.583367,'前鎮區','明道里'
+    ),
+    '高雄市前鎮區明禮里新衙路17號(東側門進入)' => array(
+        120.321031,22.583367,'前鎮區','明道里'
+    ),
+    '高雄市大寮區光武里民生路317之1號' => array(
+        120.388987,22.612395,'大寮區','光武里'
+    ),
+);
 foreach($json AS $page) {
     foreach($page->data AS $line) {
         $dataLine = array();
@@ -44,11 +70,8 @@ foreach($json AS $page) {
                 $dataLine[] = $json['AddressList'][0]['Y'];
                 $dataLine[] = $json['AddressList'][0]['TOWN'];
                 $dataLine[] = $json['AddressList'][0]['VILLAGE'];
-            } else {
-                $dataLine[] = '';
-                $dataLine[] = '';
-                $dataLine[] = '';
-                $dataLine[] = '';
+            } elseif(isset($ref[$dataLine[2]])) {
+                $dataLine = array_merge($dataLine, $ref[$dataLine[2]]);
             }
             $result[] = array_combine($header, $dataLine);
         } else {
