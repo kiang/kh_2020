@@ -73,7 +73,8 @@ foreach($json AS $page) {
             } elseif(isset($ref[$dataLine[2]])) {
                 $dataLine = array_merge($dataLine, $ref[$dataLine[2]]);
             }
-            $result[] = array_combine($header, $dataLine);
+            $key = preg_replace('/[^0-9]/', '', $dataLine[0]);
+            $result[$key] = array_combine($header, $dataLine);
         } else {
             $header = $dataLine;
             $header[] = 'X';
@@ -83,4 +84,5 @@ foreach($json AS $page) {
         }
     }
 }
+ksort($result);
 file_put_contents(dirname(__DIR__) . '/data.json', json_encode($result, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE));
