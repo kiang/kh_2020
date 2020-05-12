@@ -86,30 +86,10 @@ map.on('singleclick', function(evt) {
   map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
     if(false === pointClicked) {
       var p = feature.getProperties();
-      currentFeature = feature;
-      currentFeature.setStyle(pointStyleFunction(currentFeature));
-      if(false !== previousFeature) {
-        previousFeature.setStyle(pointStyleFunction(previousFeature));
+      var targetHash = '#' + p.properties.key;
+      if (window.location.hash !== targetHash) {
+        window.location.hash = targetHash;
       }
-      previousFeature = currentFeature;
-      appView.setCenter(feature.getGeometry().getCoordinates());
-      appView.setZoom(15);
-      var lonLat = ol.proj.toLonLat(p.geometry.getCoordinates());
-      var message = '<table class="table table-dark">';
-      message += '<tbody>';
-      for(pk in votes[p.properties.key]) {
-        message += '<tr><th scope="row" style="width: 100px;">' + pk + '</th><td>' + votes[p.properties.key][pk] + '</td></tr>';
-      }
-      message += '<tr><td colspan="2">';
-      message += '<hr /><div class="btn-group-vertical" role="group" style="width: 100%;">';
-      message += '<a href="https://www.google.com/maps/dir/?api=1&destination=' + lonLat[1] + ',' + lonLat[0] + '&travelmode=driving" target="_blank" class="btn btn-info btn-lg btn-block">Google 導航</a>';
-      message += '<a href="https://wego.here.com/directions/drive/mylocation/' + lonLat[1] + ',' + lonLat[0] + '" target="_blank" class="btn btn-info btn-lg btn-block">Here WeGo 導航</a>';
-      message += '<a href="https://bing.com/maps/default.aspx?rtp=~pos.' + lonLat[1] + '_' + lonLat[0] + '" target="_blank" class="btn btn-info btn-lg btn-block">Bing 導航</a>';
-      message += '</div></td></tr>';
-      message += '</tbody></table>';
-      sidebarTitle.innerHTML = votes[p.properties.key]['投開票所名稱'];
-      content.innerHTML = message;
-      sidebar.open('home');
       pointClicked = true;
     }
   });
@@ -129,8 +109,42 @@ $.getJSON('data.json', {}, function(c) {
     features.push(f);
   }
   vectorPoints.getSource().addFeatures(features);
+  routie(':pointId', showPoint);
 })
 
+function showPoint(pointId) {
+  var features = vectorPoints.getSource().getFeatures();
+  for(k in features) {
+    var p = features[k].getProperties();
+    if(p.properties.key === pointId) {
+      currentFeature = features[k];
+      features[k].setStyle(pointStyleFunction(features[k]));
+      if(false !== previousFeature) {
+        previousFeature.setStyle(pointStyleFunction(previousFeature));
+      }
+      previousFeature = currentFeature;
+      appView.setCenter(features[k].getGeometry().getCoordinates());
+      appView.setZoom(15);
+
+      var lonLat = ol.proj.toLonLat(p.geometry.getCoordinates());
+      var message = '<table class="table table-dark">';
+      message += '<tbody>';
+      for(pk in votes[p.properties.key]) {
+        message += '<tr><th scope="row" style="width: 100px;">' + pk + '</th><td>' + votes[p.properties.key][pk] + '</td></tr>';
+      }
+      message += '<tr><td colspan="2">';
+      message += '<hr /><div class="btn-group-vertical" role="group" style="width: 100%;">';
+      message += '<a href="https://www.google.com/maps/dir/?api=1&destination=' + lonLat[1] + ',' + lonLat[0] + '&travelmode=driving" target="_blank" class="btn btn-info btn-lg btn-block">Google 導航</a>';
+      message += '<a href="https://wego.here.com/directions/drive/mylocation/' + lonLat[1] + ',' + lonLat[0] + '" target="_blank" class="btn btn-info btn-lg btn-block">Here WeGo 導航</a>';
+      message += '<a href="https://bing.com/maps/default.aspx?rtp=~pos.' + lonLat[1] + '_' + lonLat[0] + '" target="_blank" class="btn btn-info btn-lg btn-block">Bing 導航</a>';
+      message += '</div></td></tr>';
+      message += '</tbody></table>';
+      sidebarTitle.innerHTML = votes[p.properties.key]['投開票所名稱'];
+      content.innerHTML = message;
+      sidebar.open('home');
+    }
+  }
+}
 
 var geolocation = new ol.Geolocation({
   projection: appView.getProjection()
