@@ -97,9 +97,10 @@ map.on('singleclick', function(evt) {
 
 var votes = {};
 var findTerms = [];
+var adminTree = {};
+var pointsFc = [];
 $.getJSON('data.json', {}, function(c) {
   votes = c;
-  var features = [];
   for(k in votes) {
     var f = new ol.Feature({
       geometry: new ol.geom.Point(ol.proj.fromLonLat([votes[k].X, votes[k].Y])),
@@ -107,14 +108,27 @@ $.getJSON('data.json', {}, function(c) {
         key: k
       }
     });
-    features.push(f);
+    pointsFc.push(f);
 
     findTerms.push({
       value: k,
       label: k + ' ' + votes[k]['投開票所名稱'] + ' ' + votes[k]['所屬村里'] + ' ' + votes[k]['所屬鄰別']
     });
+
+    if(!adminTree[votes[k]['系統區']]) {
+      adminTree[votes[k]['系統區']] = {};
+    }
+    if(!adminTree[votes[k]['系統區']][votes[k]['所屬村里']]) {
+      adminTree[votes[k]['系統區']][votes[k]['所屬村里']] = {};
+    }
+    adminTree[votes[k]['系統區']][votes[k]['所屬村里']][votes[k]['所屬鄰別']] = k;
   }
-  vectorPoints.getSource().addFeatures(features);
+  var areaOptions = '<option value="">--</option>';
+  for(area in adminTree) {
+    areaOptions += '<option value="' + area + '">' + area + '</option>';
+  }
+  $('#selectArea').html(areaOptions);
+  vectorPoints.getSource().addFeatures(pointsFc);
   routie(':pointId', showPoint);
 
   $('#findPoint').autocomplete({
@@ -127,6 +141,96 @@ $.getJSON('data.json', {}, function(c) {
     }
   });
 })
+
+$('#selectArea').change(function() {
+  areaChange();
+  cunliChange();
+  adminTreeChange();
+  window.location.hash = '';
+  $('#findPoint').val('');
+  sidebar.close();
+});
+$('#selectCunli').change(function() {
+  cunliChange();
+  neighborChange();
+  adminTreeChange();
+  window.location.hash = '';
+  $('#findPoint').val('');
+  sidebar.close();
+});
+$('#selectNeighbor').change(function() {
+  neighborChange();
+  adminTreeChange();
+  if(selectedNeighbor !== '') {
+    window.location.hash = '#' + selectedNeighbor;
+    $('#findPoint').val(selectedNeighbor);
+  } else {
+    window.location.hash = '';
+    $('#findPoint').val('');
+    sidebar.close();
+  }
+  
+});
+
+var areaChange = function() {
+  selectedArea = $('#selectArea').val();
+  if(selectedArea !== '') {
+    selectedCunli = '';
+    var cunliOptions = '<option value="">--</option>';
+    for(cunli in adminTree[selectedArea]) {
+      cunliOptions += '<option value="' + cunli + '">' + cunli + '</option>';
+    }
+    $('#selectCunli').html(cunliOptions);
+  } else {
+    selectedNeighbor = '';
+    selectedCunli = '';
+    $('#selectNeighbor').html('');
+    $('#selectCunli').html('');
+  }
+}
+var cunliChange = function() {
+  selectedCunli = $('#selectCunli').val();
+  if(selectedCunli !== '' && adminTree[selectedArea][selectedCunli]) {
+    var neighborOptions = '<option value="">--</option>';
+    for(neighbor in adminTree[selectedArea][selectedCunli]) {
+      neighborOptions += '<option value="' + adminTree[selectedArea][selectedCunli][neighbor] + '">' + neighbor + '(' + adminTree[selectedArea][selectedCunli][neighbor] + ')</option>';
+    }
+    $('#selectNeighbor').html(neighborOptions);
+  } else {
+    selectedNeighbor = '';
+    $('#selectNeighbor').html('');
+  }
+}
+var neighborChange = function() {
+  selectedNeighbor = $('#selectNeighbor').val();
+}
+
+var selectedArea = '', selectedNeighbor = '', selectedCunli = '';
+var adminTreeChange = function() {
+  var vSource = vectorPoints.getSource();
+  var vFormat = vSource.getFormat();
+  var newFeatures = [];
+  vSource.clear();
+  if(selectedArea !== '') {
+    for(k in pointsFc) {
+      var key = pointsFc[k].getProperties().properties.key;
+      if(votes[key]['系統區'] === selectedArea) {
+        if(selectedCunli === '' || votes[key]['所屬村里'] === selectedCunli) {
+          newFeatures.push(pointsFc[k]);
+        }
+      }
+    }
+  } else {
+    newFeatures = pointsFc;
+  }
+  vSource.addFeatures(newFeatures);
+  if(newFeatures.length > 1) {
+    var ex = vSource.getExtent();
+    if(!ol.extent.isEmpty(ex)) {
+      map.getView().fit(ex);
+    }
+  }
+}
 
 function showPoint(pointId) {
   var features = vectorPoints.getSource().getFeatures();
