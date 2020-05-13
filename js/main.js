@@ -134,8 +134,11 @@ $.getJSON('data.json', {}, function(c) {
   $('#findPoint').autocomplete({
     source: findTerms,
     select: function(event, ui) {
-      selectedArea = '';
-      adminTreeChange();
+      var vfc = vectorPoints.getSource().getFeatures();
+      if(vfc.length !== pointsFc.length) {
+        selectedArea = '';
+        adminTreeChange();
+      }
       var targetHash = '#' + ui.item.value;
       if (window.location.hash !== targetHash) {
         window.location.hash = targetHash;
