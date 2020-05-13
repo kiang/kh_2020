@@ -96,6 +96,7 @@ map.on('singleclick', function(evt) {
 });
 
 var votes = {};
+var findTerms = [];
 $.getJSON('data.json', {}, function(c) {
   votes = c;
   var features = [];
@@ -107,9 +108,24 @@ $.getJSON('data.json', {}, function(c) {
       }
     });
     features.push(f);
+
+    findTerms.push({
+      value: k,
+      label: k + ' ' + votes[k]['投開票所名稱'] + ' ' + votes[k]['所屬村里'] + ' ' + votes[k]['所屬鄰別']
+    });
   }
   vectorPoints.getSource().addFeatures(features);
   routie(':pointId', showPoint);
+
+  $('#findPoint').autocomplete({
+    source: findTerms,
+    select: function(event, ui) {
+      var targetHash = '#' + ui.item.value;
+      if (window.location.hash !== targetHash) {
+        window.location.hash = targetHash;
+      }
+    }
+  });
 })
 
 function showPoint(pointId) {
